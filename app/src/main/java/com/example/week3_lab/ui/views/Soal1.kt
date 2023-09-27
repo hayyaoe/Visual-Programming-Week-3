@@ -118,7 +118,7 @@ fun Soal1(){
                     isDigit = com.example.week3_lab.ui.views.isDigit(input = height)
 
                     if (isDigit(input = base)&& isDigit(input = height)){
-                        var result = (base.toDouble() * height.toDouble())/2
+                        val result = (base.toDouble() * height.toDouble())/2
                         Text(
                             text = result.toString(),
                             fontWeight = FontWeight.Bold,
@@ -152,6 +152,7 @@ fun Soal1(){
 
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTextField(
@@ -160,7 +161,6 @@ fun CustomTextField(
     text: String,
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
-    modifier2: Modifier = Modifier,
     isDigit : Boolean
 ) {
     OutlinedTextField(
@@ -188,10 +188,10 @@ fun CustomTextField(
     }
 }
 
-@Composable
+
 fun isDigit (input: String): Boolean{
     val inputPatterns = Pattern.compile(
-        "^[0-9]+$"
+        "^[-0-9]+$"
     )
 
     return inputPatterns.matcher(input).matches()
