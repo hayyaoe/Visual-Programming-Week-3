@@ -42,10 +42,11 @@ import androidx.compose.ui.unit.sp
 import com.example.week3_lab.R
 import kotlinx.coroutines.launch
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
-fun Soal4(){
+fun Soal4() {
     var nilai1 by rememberSaveable { mutableStateOf("") }
     var nilai2 by rememberSaveable { mutableStateOf("") }
     var nilai3 by rememberSaveable { mutableStateOf("") }
@@ -64,7 +65,7 @@ fun Soal4(){
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    Scaffold (
+    Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) {
         Column(
@@ -74,11 +75,11 @@ fun Soal4(){
             horizontalAlignment = Alignment.CenterHorizontally
         )
         {
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.Cyan)
-            ){
+            ) {
                 Text(
                     text = "Student Score",
                     fontSize = 24.sp,
@@ -108,7 +109,7 @@ fun Soal4(){
 
                 MoreThanZeroInputField(
                     value = nilai1,
-                    onValueChanged = {nilai1 = it},
+                    onValueChanged = { nilai1 = it },
                     text = "Buddy's Score",
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
@@ -116,13 +117,13 @@ fun Soal4(){
                     ),
                     modifier = Modifier
                         .padding(vertical = 5.dp),
-                    isDigit= isNilai1,
+                    isDigit = isNilai1,
                     moreThanZero = moreThanZero1
                 )
 
                 MoreThanZeroInputField(
                     value = nilai2,
-                    onValueChanged = {nilai2 = it},
+                    onValueChanged = { nilai2 = it },
                     text = "Mikey's Score",
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
@@ -130,13 +131,13 @@ fun Soal4(){
                     ),
                     modifier = Modifier
                         .padding(vertical = 5.dp),
-                    isDigit= isNilai2,
+                    isDigit = isNilai2,
                     moreThanZero = moreThanZero2
                 )
 
                 MoreThanZeroInputField(
                     value = nilai3,
-                    onValueChanged = {nilai3 = it},
+                    onValueChanged = { nilai3 = it },
                     text = "Bonno's Score",
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
@@ -144,20 +145,26 @@ fun Soal4(){
                     ),
                     modifier = Modifier
                         .padding(vertical = 5.dp),
-                    isDigit= isNilai3,
+                    isDigit = isNilai3,
                     moreThanZero = moreThanZero3
                 )
 
-                if(nilai1.isNotBlank()){
+                if (nilai1.isNotBlank()) {
                     isNilai1 = isItADigit(input = nilai1)
+                } else {
+                    showText = false
                 }
 
-                if(nilai2.isNotBlank()){
+                if (nilai2.isNotBlank()) {
                     isNilai2 = isItADigit(input = nilai2)
+                } else {
+                    showText = false
                 }
 
-                if(nilai3.isNotBlank()){
+                if (nilai3.isNotBlank()) {
                     isNilai3 = isItADigit(input = nilai3)
+                } else {
+                    showText = false
                 }
 
 
@@ -167,7 +174,19 @@ fun Soal4(){
                         moreThanZero2 = range(input = nilai2.toDouble())
                         moreThanZero3 = range(input = nilai3.toDouble())
 
-                        showText = isNilai1 && moreThanZero1 && isNilai2 && moreThanZero2 && isNilai3 && moreThanZero3
+                        showText =
+                            isNilai1 && moreThanZero1 && isNilai2 && moreThanZero2 && isNilai3 && moreThanZero3
+
+                        if (showText) {
+                            averageScore = (nilai1.toDouble() + nilai2.toDouble() + nilai3.toDouble()) / 3
+                            scope.launch {
+                                when (averageScore) {
+                                    in 0.0..69.0 -> snackbarHostState.showSnackbar("Siswa perlu diberi soal tambahan")
+                                    in 70.0..100.0 -> snackbarHostState.showSnackbar("Siswa mengerti pembelajaran ")
+                                    else -> snackbarHostState.showSnackbar("Miss calculation")
+                                }
+                            }
+                        }
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -176,7 +195,9 @@ fun Soal4(){
                     colors = ButtonDefaults.buttonColors(
                         Color.Cyan,
                         Color.White,
-                        Color.LightGray, Color.White)
+                        Color.LightGray, Color.White
+                    )
+
                 ) {
                     Text(
                         text = "Calculate Average",
@@ -187,25 +208,14 @@ fun Soal4(){
                     )
                 }
 
-                if(showText){
-
-                    averageScore = (nilai1.toDouble() + nilai2.toDouble() + nilai3.toDouble())/3
+                if (showText) {
                     Text(
-                        text = "Average Score :  ${String.format("%.2f",averageScore)}",
+                        text = "Average Score :  ${String.format("%.2f", averageScore)}",
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(vertical = 5.dp)
 
                     )
-
-                    scope.launch {
-                        when(averageScore){
-                            in 0.0..69.0 -> snackbarHostState.showSnackbar("Siswa perlu diberi soal tambahan")
-                            in 70.0..100.0 -> snackbarHostState.showSnackbar("Siswa mengerti pembelajaran ")
-                            else -> snackbarHostState.showSnackbar("Miss calculation")
-                        }
-
-                    }
                 }
 
             }
@@ -246,9 +256,7 @@ fun MoreThanZeroInputField(
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
         )
-    }
-
-    else if (!moreThanZero) {
+    } else if (!moreThanZero) {
         Text(
             text = "Input must be in range 0-100",
             color = Color.Red,
@@ -259,11 +267,15 @@ fun MoreThanZeroInputField(
     }
 }
 
-fun range(input: Double): Boolean {
+fun range(input: Double?): Boolean {
+    if (input == null) {
+        return false
+    }
     return (input in 0.0..100.0)
 }
+
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun Soal4Preview(){
+fun Soal4Preview() {
     Soal4()
 }
