@@ -13,12 +13,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -33,7 +31,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -44,25 +41,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.week3_lab.R
 import kotlinx.coroutines.launch
-import java.util.Calendar
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CoroutineCreationDuringComposition")
 @Composable
-fun Soal3(){
-    var name by rememberSaveable { mutableStateOf("") }
-    var usia by rememberSaveable { mutableStateOf("") }
-    var umur by rememberSaveable { mutableStateOf(0) }
-    var isUsia by rememberSaveable { mutableStateOf(true) }
-    var isMoreThanZero by rememberSaveable { mutableStateOf(true) }
+fun Soal4(){
+    var nilai1 by rememberSaveable { mutableStateOf("") }
+    var nilai2 by rememberSaveable { mutableStateOf("") }
+    var nilai3 by rememberSaveable { mutableStateOf("") }
+    var isNilai1 by rememberSaveable { mutableStateOf(true) }
+    var isNilai2 by rememberSaveable { mutableStateOf(true) }
+    var isNilai3 by rememberSaveable { mutableStateOf(true) }
+
+    var moreThanZero1 by rememberSaveable { mutableStateOf(true) }
+    var moreThanZero2 by rememberSaveable { mutableStateOf(true) }
+    var moreThanZero3 by rememberSaveable { mutableStateOf(true) }
+
+    var averageScore by rememberSaveable { mutableStateOf(0.0) }
+
     var showText by rememberSaveable { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     Scaffold (
-        snackbarHost = { SnackbarHost(snackbarHostState)}
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) {
         Column(
             modifier = Modifier
@@ -77,7 +80,7 @@ fun Soal3(){
                     .background(Color.Cyan)
             ){
                 Text(
-                    text = "AgeCalculator",
+                    text = "Student Score",
                     fontSize = 24.sp,
                     textAlign = TextAlign.Start,
                     fontWeight = FontWeight.Bold,
@@ -97,59 +100,86 @@ fun Soal3(){
             ) {
 
                 Image(
-                    painter = painterResource(id = R.drawable.outline_sentiment_satisfied_24),
-                    contentDescription = "face",
+                    painter = painterResource(id = R.drawable.logo_uc_fix_sep_2021_01__1_),
+                    contentDescription = "UC Logo",
                     modifier = Modifier
                         .size(150.dp)
                 )
 
-                TextField(
-                    value = name,
-                    onValueChanged = {name = it},
-                    text = "Enter Your Name",
+                MoreThanZeroInputField(
+                    value = nilai1,
+                    onValueChanged = {nilai1 = it},
+                    text = "Buddy's Score",
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Text,
+                        keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Next,
                     ),
                     modifier = Modifier
-                        .padding(vertical = 5.dp)
-
+                        .padding(vertical = 5.dp),
+                    isDigit= isNilai1,
+                    moreThanZero = moreThanZero1
                 )
 
-                TinggiInputField(
-                    value = usia,
-                    onValueChanged = {usia = it},
-                    text = "Enter Your Birth Year",
+                MoreThanZeroInputField(
+                    value = nilai2,
+                    onValueChanged = {nilai2 = it},
+                    text = "Mikey's Score",
                     keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next,
                     ),
-                    isDigit = isUsia,
-                    moreThanZero =  isMoreThanZero,
                     modifier = Modifier
-                        .padding(vertical = 5.dp)
+                        .padding(vertical = 5.dp),
+                    isDigit= isNilai2,
+                    moreThanZero = moreThanZero2
                 )
 
-                if(usia.isNotBlank()){
-                    isUsia = isItADigit(input = usia)
+                MoreThanZeroInputField(
+                    value = nilai3,
+                    onValueChanged = {nilai3 = it},
+                    text = "Bonno's Score",
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next,
+                    ),
+                    modifier = Modifier
+                        .padding(vertical = 5.dp),
+                    isDigit= isNilai3,
+                    moreThanZero = moreThanZero3
+                )
+
+                if(nilai1.isNotBlank()){
+                    isNilai1 = isItADigit(input = nilai1)
                 }
+
+                if(nilai2.isNotBlank()){
+                    isNilai2 = isItADigit(input = nilai2)
+                }
+
+                if(nilai3.isNotBlank()){
+                    isNilai3 = isItADigit(input = nilai3)
+                }
+
 
                 Button(
                     onClick = {
+                        moreThanZero1 = range(input = nilai1.toDouble())
+                        moreThanZero2 = range(input = nilai2.toDouble())
+                        moreThanZero3 = range(input = nilai3.toDouble())
 
-
-                        isMoreThanZero = moreThanZero(input = usia.toDouble())
-                        umur = Calendar.getInstance().get(Calendar.YEAR) - usia.toInt()
-                        showText = isUsia && isMoreThanZero
+                        showText = isNilai1 && moreThanZero1 && isNilai2 && moreThanZero2 && isNilai3 && moreThanZero3
                     },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 10.dp, horizontal = 55.dp),
-                    enabled = usia.isNotBlank() && name.isNotBlank(),
-                    colors = ButtonDefaults.buttonColors(Color.Cyan,Color.White,Color.LightGray, Color.White)
+                    enabled = nilai1.isNotBlank() && nilai2.isNotBlank() && nilai3.isNotBlank(),
+                    colors = ButtonDefaults.buttonColors(
+                        Color.Cyan,
+                        Color.White,
+                        Color.LightGray, Color.White)
                 ) {
                     Text(
-                        text = "Calculate Your Age",
+                        text = "Calculate Average",
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(vertical = 5.dp)
@@ -158,8 +188,10 @@ fun Soal3(){
                 }
 
                 if(showText){
+
+                    averageScore = (nilai1.toDouble() + nilai2.toDouble() + nilai3.toDouble())/3
                     Text(
-                        text = "Hi, $name! Your Age is $umur",
+                        text = "Average Score :  ${String.format("%.2f",averageScore)}",
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(vertical = 5.dp)
@@ -167,11 +199,15 @@ fun Soal3(){
                     )
 
                     scope.launch {
-                        snackbarHostState.showSnackbar(
-                            "Hi, $name! Your Age is $umur"
-                        )
+                        when(averageScore){
+                            in 0.0..69.0 -> snackbarHostState.showSnackbar("Siswa perlu diberi soal tambahan")
+                            in 70.0..100.0 -> snackbarHostState.showSnackbar("Siswa mengerti pembelajaran ")
+                            else -> snackbarHostState.showSnackbar("Miss calculation")
+                        }
+
                     }
                 }
+
             }
         }
     }
@@ -179,12 +215,14 @@ fun Soal3(){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextField(
+fun MoreThanZeroInputField(
     value: String,
     onValueChanged: (String) -> Unit,
     text: String,
     keyboardOptions: KeyboardOptions,
     modifier: Modifier = Modifier,
+    isDigit: Boolean,
+    moreThanZero: Boolean
 ) {
     OutlinedTextField(
         value = value,
@@ -198,10 +236,34 @@ fun TextField(
             unfocusedBorderColor = Color.Blue,
             textColor = Color.Blue
         ),
+        isError = !isDigit
     )
+    if (!isDigit) {
+        Text(
+            text = "Input must be Digit",
+            color = Color.Red,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+        )
+    }
+
+    else if (!moreThanZero) {
+        Text(
+            text = "Input must be in range 0-100",
+            color = Color.Red,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+        )
+    }
 }
-@Preview(showBackground = true, showSystemUi = true)
+
+fun range(input: Double): Boolean {
+    return (input in 0.0..100.0)
+}
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
-fun Soal3Preview(){
-    Soal3()
+fun Soal4Preview(){
+    Soal4()
 }

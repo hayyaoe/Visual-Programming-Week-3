@@ -108,11 +108,17 @@ fun Soal2() {
                         .padding(top = 20.dp)
                 )
 
+                if ( height.isNotBlank()){
+                    isTinggi = isItADigit(input = height)
+
+                }
+                if(weight.isNotBlank()){
+                isBerat = isItADigit(input = weight)
+                }
+
+
                 Button(
                     onClick = {
-
-                        isTinggi = isDigit(input = height)
-                        isBerat = isDigit(input = weight)
                         morethanzero1 = moreThanZero(weight.toDouble())
                         morethanzero2 = moreThanZero(height.toDouble())
 
@@ -283,7 +289,7 @@ fun TinggiInputField(
 
     else if (!moreThanZero) {
         Text(
-            text = "Height must be Greater than 0",
+            text = "Input must be Greater than 0",
             color = Color.Red,
             modifier = modifier
                 .fillMaxWidth()
