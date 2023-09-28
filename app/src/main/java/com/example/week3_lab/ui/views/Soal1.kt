@@ -114,10 +114,10 @@ fun Soal1(){
 
                 if (base.isNotBlank() && height.isNotBlank()){
 
-                    isDigit = com.example.week3_lab.ui.views.isDigit(input = base)
-                    isDigit = com.example.week3_lab.ui.views.isDigit(input = height)
+                    isDigit = isItADigit(input = base)
+                    isDigit = isItADigit(input = height)
 
-                    if (isDigit(input = base)&& isDigit(input = height)){
+                    if (isItADigit(input = base) && isItADigit(input = height)){
                         val result = (base.toDouble() * height.toDouble())/2
                         Text(
                             text = result.toString(),
@@ -189,7 +189,7 @@ fun CustomTextField(
 }
 
 
-fun isDigit (input: String): Boolean{
+fun isItADigit (input: String): Boolean{
     val inputPatterns = Pattern.compile(
         "^[-0-9]+$"
     )
