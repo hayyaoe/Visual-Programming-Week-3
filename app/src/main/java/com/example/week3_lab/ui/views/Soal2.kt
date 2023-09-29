@@ -174,7 +174,6 @@ fun Soal2() {
                                 in 18.6..24.9 -> Texts("You are Normal weight")
                                 in 25.0..29.9 -> Texts("You are Overweight")
                                 else -> Texts("You are Obese")
-
                             }
                             Button(
                                 onClick = {
