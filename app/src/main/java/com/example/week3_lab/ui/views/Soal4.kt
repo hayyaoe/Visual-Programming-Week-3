@@ -1,8 +1,10 @@
 package com.example.week3_lab.ui.views
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -58,7 +61,7 @@ fun Soal4() {
     var moreThanZero2 by rememberSaveable { mutableStateOf(true) }
     var moreThanZero3 by rememberSaveable { mutableStateOf(true) }
 
-    var averageScore by rememberSaveable { mutableStateOf(0.0) }
+    var averageScore by rememberSaveable { mutableDoubleStateOf(0.0) }
 
     var showText by rememberSaveable { mutableStateOf(false) }
 
@@ -209,13 +212,20 @@ fun Soal4() {
                 }
 
                 if (showText) {
-                    Text(
-                        text = "Average Score :  ${String.format("%.2f", averageScore)}",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(vertical = 5.dp)
-
-                    )
+                    Button(
+                        onClick = {},
+                        colors = ButtonDefaults.buttonColors(Color.Transparent),
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .border(BorderStroke(2.dp, color = Color.Blue), RoundedCornerShape(50))
+                    ) {
+                        Text(
+                            text = "Average Score :  ${String.format("%.2f", averageScore)}",
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
                 }
 
             }
